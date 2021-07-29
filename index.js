@@ -21,20 +21,27 @@ let questions = [
 app.post("/auth", (req, res) => {
 	const spawn = require("child_process").spawn;
 	let reply = '';
+	let e = 0
 	const pythonProcess = spawn('python3', ['app.py', req.body.id.toLowerCase()]);
 	pythonProcess.stdout.on('data', (data) => {
 		reply = JSON.parse(data.toString())
 	})
-	pythonProcess.on('error', (err) => {
-		res.send({validation : "la27"})
+	pythonProcess.stderr.on('data', (err) => {
+		e = 1
+		console.log(err.toString())
 	})
 	pythonProcess.on('exit', (code) => {
-		res.send({
-			validation : "ok",
-			gm : reply.gm,
-			gi : reply.gi,
-			ge : reply.ge,
-		})
+		if (e == 0) {
+			res.send({
+				validation : "ok",
+				gm : reply.gm,
+				gi : reply.gi,
+				ge : reply.ge,
+			})
+		} else {
+			res.send({validation : "la27"})
+		}
+		
 	});
 });
 
