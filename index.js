@@ -11,18 +11,18 @@ var corsOptions = {
 app.use(express.json())
 app.use(cors(corsOptions))
 
-let questions = [
-			{question : "first question ?", answer : ["first answer","second answer"] },
-			{question : "Second question ?", answer : ["first answer","second answer","third answer"] },
-			{question : "third question ?", answer : ["first answer","second answer","third answer"] },
-			{question : "fourth question ?", answer : ["first answer","second answer"] }
-		]
+// let questions = [
+// 			{question : "first question ?", answer : ["first answer","second answer"] },
+// 			{question : "Second question ?", answer : ["first answer","second answer","third answer"] },
+// 			{question : "third question ?", answer : ["first answer","second answer","third answer"] },
+// 			{question : "fourth question ?", answer : ["first answer","second answer"] }
+// 		]
 
 app.post("/auth", (req, res) => {
 	const spawn = require("child_process").spawn;
 	let reply = '';
 	let e = 0
-	const pythonProcess = spawn('python3', ['app.py', req.body.id.toLowerCase()]);
+	const pythonProcess = spawn('python3', ['academics.py', req.body.id.toLowerCase()]);
 	pythonProcess.stdout.on('data', (data) => {
 		reply = JSON.parse(data.toString())
 	})
@@ -46,42 +46,93 @@ app.post("/auth", (req, res) => {
 });
 
 app.post("/gm", (req, res) => {
-	if(req.body.id.toLowerCase() == ID) {
-		// retrive data from the database
-		setTimeout(()=>{res.send({
-			form : "ok",
-			l : questions.length,
-			list : questions,
-		})},1000)
-	} else {
-		res.send({validation : "la27"})
-	}
+	const spawn = require("child_process").spawn;
+	let reply = '';
+	let e = 0
+	const pythonProcess = spawn('python3', ['reviewgm.py', req.body.id.toLowerCase()]);
+	pythonProcess.stdout.on('data', (data) => {
+		reply = JSON.parse(data.toString()).list
+	})
+	pythonProcess.stderr.on('data', (err) => {
+		e = 1
+		console.log(err.toString())
+	})
+	pythonProcess.on('exit', (code) => {
+		if (e == 0) {
+			console.log(reply)
+			res.send({
+				validation : "ok",
+				cf : reply[0], //confidence
+				is : reply[1], //insertion satisfaction
+				fi : reply[2], //field insertion
+				s : reply[3], //salary
+				cd : reply[4] // workcondition
+			})
+		} else {
+			res.send({validation : "la27"})
+		}
+		
+	});
 });
 
 app.post("/gi", (req, res) => {
-	if(req.body.id.toLowerCase() == ID) {
-		// retrive data from the database
-		setTimeout(()=>{res.send({
-			form : "ok",
-			l : questions.length,
-			list : questions,
-		})},1000)
-	} else {
-		res.send({validation : "la27"})
-	}
+	const spawn = require("child_process").spawn;
+	let reply = '';
+	let e = 0
+	const pythonProcess = spawn('python3', ['reviewgi.py', req.body.id.toLowerCase()]);
+	pythonProcess.stdout.on('data', (data) => {
+		reply = JSON.parse(data.toString()).list
+	})
+	pythonProcess.stderr.on('data', (err) => {
+		e = 1
+		console.log(err.toString())
+	})
+	pythonProcess.on('exit', (code) => {
+		if (e == 0) {
+			console.log(reply)
+			res.send({
+				validation : "ok",
+				cf : reply[0], //confidence
+				is : reply[1], //insertion satisfaction
+				fi : reply[2], //field insertion
+				s : reply[3], //salary
+				cd : reply[4] // workcondition
+			})
+		} else {
+			res.send({validation : "la27"})
+		}
+		
+	});
 });
 
 app.post("/ge", (req, res) => {
-	if(req.body.id.toLowerCase() == ID) {
-		// retrive data from the database
-		setTimeout(()=>{res.send({
-			form : "ok",
-			l : questions.length,
-			list : questions,
-		})},1000)
-	} else {
-		res.send({validation : "la27"})
-	}
+	const spawn = require("child_process").spawn;
+	let reply = '';
+	let e = 0
+	const pythonProcess = spawn('python3', ['reviewge.py', req.body.id.toLowerCase()]);
+	pythonProcess.stdout.on('data', (data) => {
+		reply = JSON.parse(data.toString()).list
+	})
+	pythonProcess.stderr.on('data', (err) => {
+		e = 1
+		console.log(err.toString())
+	})
+	pythonProcess.on('exit', (code) => {
+		if (e == 0) {
+			console.log(reply)
+			res.send({
+				validation : "ok",
+				cf : reply[0], //confidence
+				is : reply[1], //insertion satisfaction
+				fi : reply[2], //field insertion
+				s : reply[3], //salary
+				cd : reply[4] // workcondition
+			})
+		} else {
+			res.send({validation : "la27"})
+		}
+		
+	});
 });
 
 // app.post("/python", (req, res) => {
