@@ -9,7 +9,7 @@ clf_elec = unpickled("clf_elec")
 clf_indus = unpickled("clf_indus")
 clf_meca = unpickled("clf_meca")
 
-client = pymongo.MongoClient("mongodb+srv://tfa7a:tfa7a123@aoai-cluster.tzpfo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+client = pymongo.MongoClient("ommited, this is just for demonstration purposes")
 db = client.students
 
 notes = db.aoai.find_one({ "id" : str(sys.argv[1]) })["notes"]
